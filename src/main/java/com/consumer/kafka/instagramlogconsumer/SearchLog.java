@@ -15,20 +15,20 @@ public class SearchLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     @Column
-    String timeRecord;
+    private String timeRecord;
 
     @Column
-    String thread;
+    private String thread;
 
     @Column
-    String pattern;
+    private String pattern;
 
     @Column
-    String logger;
+    private String logger;
 
     @Column
-    String keyword;
+    private String keyword;
 }
