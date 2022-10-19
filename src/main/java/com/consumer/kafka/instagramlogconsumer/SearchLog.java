@@ -18,7 +18,7 @@ public class SearchLog {
     private Long id;
 
     @Column
-    private String timeRecord;
+    private LocalDateTime timeRecord;
 
     @Column
     private String thread;
