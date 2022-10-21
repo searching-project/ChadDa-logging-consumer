@@ -23,20 +23,9 @@ import java.util.List;
 @Slf4j
 public class LogService {
 
-//    private final SearchLogRepository searchLogRepository;
-//    private final LogRepository logRepository;
-//    private final ExecutionTimeLogRepository executionTimeLogRepository;
-
-    @Autowired
-    private SearchLogRepository searchLogRepository;
-
-    @Autowired
-    private LogRepository logRepository;
-
-    @Autowired
-    private ExecutionTimeLogRepository executionTimeLogRepository;
-
-
+    private final SearchLogRepository searchLogRepository;
+    private final LogRepository logRepository;
+    private final ExecutionTimeLogRepository executionTimeLogRepository;
 
     @Transactional
     public void saveSearchLog(String in) {
@@ -76,16 +65,17 @@ public class LogService {
                     .build();
 
             searchLogRepository.save(searchLog);
+            System.out.println("search_log 저장 완료");
         }
     }
 
     @Transactional
-    public void saveLog(String in) {
+//    public void saveLog(String in) {
+    // 테스트용
+    public Log saveLog(String in) {
         List<String> strs = new ArrayList<>();
         String[] splitStr = in.split(" ");
         Collections.addAll(strs, splitStr);
-
-//        if (strs.get(7).startsWith("com")) {
 
         // 방법 2 : time_record를 Timestamp로 저장
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
@@ -94,33 +84,49 @@ public class LogService {
         LocalDateTime datetime = LocalDateTime.parse(strs.get(0) + " " + strs.get(1), format);
 
         String thread = strs.get(2).replaceAll("[\\[\\]]", "");
-        String className = strs.get(8);
-        String methodName = strs.get(9);
-//            String parameter = strs.get(10);
-        String parameter = strs.get(10) + strs.get(11) + strs.get(12) + strs.get(13) + strs.get(14) + strs.get(15) + strs.get(16) + strs.get(17) + strs.get(18);
+        String level = strs.get(3);
+        String logger = strs.get(5);
+        String className = strs.get(7);
+        String methodName = strs.get(8);
+        String parameterKeyword = strs.get(10);
+        String pageRequestNumber = "";
+        String pageRequestSize = "";
+        String sort = "";
+
+
+        if (strs.size() >= 14) {
+            pageRequestNumber = strs.get(14).replaceAll(",", "");
+            pageRequestSize = strs.get(16).replaceAll(",", "");
+            sort = strs.get(18).replaceAll("[\\]]", "");
+        }
 
         Log log = Log.builder()
                 .timeRecord(datetime)
                 .thread(thread)
-                .level(strs.get(3))
-                .logger(strs.get(5))
+                .level(level)
+                .logger(logger)
                 .className(className)
                 .methodName(methodName)
-                .parameter(parameter)
+                .parameterKeyword(parameterKeyword)
+                .pageRequestNumber(pageRequestNumber)
+                .pageRequestSize(pageRequestSize)
+                .sort(sort)
                 .build();
 
         logRepository.save(log);
         System.out.println("저장 명령 완료");
-//        }
+
+        // 테스트용
+        return log;
     }
 
     @Transactional
-    public void saveExecutionTimeLog(String in) {
+//    public void saveExecutionTimeLog(String in) {
+    // 테스트용
+    public ExecutionTimeLog saveExecutionTimeLog(String in) {
         List<String> strs = new ArrayList<>();
         String[] splitStr = in.split(" ");
         Collections.addAll(strs, splitStr);
-
-//        if (strs.get(7).startsWith("com")) {
 
         // 방법 2 : time_record를 Timestamp로 저장
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
@@ -129,24 +135,41 @@ public class LogService {
         LocalDateTime datetime = LocalDateTime.parse(strs.get(0) + " " + strs.get(1), format);
 
         String thread = strs.get(2).replaceAll("[\\[\\]]", "");
-        String className = strs.get(8);
-        String methodName = strs.get(9);
-        String parameter = strs.get(10) + strs.get(11) + strs.get(12) + strs.get(13) + strs.get(14) + strs.get(15) + strs.get(16) + strs.get(17) + strs.get(18);
-        String executionTime = strs.get(22);
+        String level = strs.get(3);
+        String logger = strs.get(5);
+        String className = strs.get(7);
+        String methodName = strs.get(8);
+        String executionTime = strs.get(12);
+        String parameterKeyword = strs.get(14);
+        String pageRequestNumber = "";
+        String pageRequestSize = "";
+        String sort = "";
+
+
+        if (strs.size() >= 15) {
+            pageRequestNumber = strs.get(18).replaceAll(",", "");
+            pageRequestSize = strs.get(20).replaceAll(",", "");
+            sort = strs.get(22).replaceAll("[\\]]", "");
+        }
+
 
         ExecutionTimeLog log = ExecutionTimeLog.builder()
                 .timeRecord(datetime)
                 .thread(thread)
-                .level(strs.get(3))
-                .logger(strs.get(5))
+                .level(level)
+                .logger(logger)
                 .className(className)
                 .methodName(methodName)
-                .parameter(parameter)
                 .executionTime(executionTime)
+                .parameterKeyword(parameterKeyword)
+                .pageRequestNumber(pageRequestNumber)
+                .pageRequestSize(pageRequestSize)
+                .sort(sort)
                 .build();
 
         executionTimeLogRepository.save(log);
         System.out.println("실행시간 저장 명령 완료");
-//        }
+
+        return log;
     }
 }
