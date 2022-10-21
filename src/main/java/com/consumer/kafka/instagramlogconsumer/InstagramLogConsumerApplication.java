@@ -19,24 +19,7 @@ public class InstagramLogConsumerApplication {
     @KafkaListener(id = "myId1", topics = "search_log")
     public void searchLogListen(String in) {
 
-        logService.saveSearchLog(in);
-        System.out.println(in);
-
-    }
-
-    @KafkaListener(id = "myId2", topics = "log")
-    public void logListen(String in) {
-
         logService.saveLog(in);
         System.out.println(in);
-
-    }
-
-    @KafkaListener(id = "myId3", topics = "execution_time_log")
-    public void executionTimeLogListen(String in) {
-
-        logService.saveExecutionTimeLog(in);
-        System.out.println(in);
-
     }
 }

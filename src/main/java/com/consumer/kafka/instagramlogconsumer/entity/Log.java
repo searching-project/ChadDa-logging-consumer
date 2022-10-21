@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "log")
+@Entity(name = "united_log")
 @Builder
 @Getter
 public class Log {
@@ -48,4 +48,7 @@ public class Log {
 
     @Column
     private String sort;
+
+    @Column
+    private String executionTime;
 }
